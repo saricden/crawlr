@@ -1,0 +1,87 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  color: #000;
+  background-color: #FFF;
+  font-family: sans-serif;
+}
+#start-form {
+  width: 95%;
+  max-width: 500px;
+  margin: 60px auto;
+}
+input, select {
+  display: block;
+  width: 100%;
+}
+input {
+  border: 0;
+  border-bottom: solid 1px #000;
+  background-color: transparent;
+  outline: none;
+}
+::-webkit-input-placeholder {
+  color: #333;
+}
+:-moz-placeholder {
+   color: #333;
+   opacity: 1;
+}
+::-moz-placeholder {
+   color: #333;
+   opacity: 1;
+}
+:-ms-input-placeholder {
+   color: #333;
+}
+#keyword, #start-url {
+  margin: 30px 0;
+  padding-bottom: 5px;
+}
+select {
+  margin-bottom: 15px;
+  padding: 5px 0;
+}
+.radio {
+  padding: 15px 0;
+}
+.radio input {
+  width: initial;
+  margin-right: 10px;
+  margin-top: 3px;
+}
+.radio label, .radio input {
+  display: block;
+  float: left;
+  font-size: 14px;
+}
+.radio:after {
+  content: "";
+  display: block;
+  clear: both;  
+}
+input.small {
+  display: inline-block;
+  width: 25px;
+  float: none;
+  margin: 0;
+  text-align: center;
+}
+button {
+  display: block;
+  margin: 15px auto;
+  padding: 5px 30px;
+}
+h1, h2 {
+  text-align: center;
+  font-family: serif;
+}
+h1 {
+  font-size: 0.9em;
+}
+h2 {
+  margin-bottom: 60px;
+  font-size: 2em;
+}

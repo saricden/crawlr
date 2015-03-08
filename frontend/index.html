@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Crawlr</title>
+    <link rel="stylesheet" type="text/css" href="crawlr.css">
+  </head>
+  <body>
+
+    <div id="start-form">
+      <h1>[ Crawlr ]</h1>
+      <h2>Okay, let's find some files.</h2>
+
+      <input placeholder="Start here (URL)" type="text" id="start-url">
+      <input placeholder="Follow links on pages containing (keyword)" type="text" id="keyword">
+      <select id="mimetype">
+        <option>Look for (file type)</option>
+      </select>
+
+      <div class="radio">
+        <input type="radio" id="maxreq" name="endcondition">
+        <label for="maxreq">Keep searching until we check <input type="text" id="maxreq_num" value="100" class="small" maxlength="3"> pages.</label>
+      </div>
+
+      <div class="radio">
+        <input type="radio" id="maxmatch" name="endcondition">
+        <label for="maxmatch">Keep searching until we find <input type="text" id="maxmatch_num" value="50" class="small" maxlength="3"> files.</label>
+      </div>
+
+      <div class="radio">
+        <input type="radio" id="nomore" name="endcondition" checked="checked">
+        <label for="nomore">Keep searching until we can't find your keyword anymore.</label>
+      </div>
+
+      <button id="start-btn">Go!</button>
+    </div>
+
+    <script type="text/javascript" src="crawlr.js"></script>
+
+  </body>
+</html>
