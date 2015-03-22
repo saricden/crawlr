@@ -81,16 +81,15 @@ function getLastResponseCode($url = 'http://jsforcats.com/')
 }
 
 /*
-Scan URL for more links if it's an HTML document, otherwise return content type.
-~ I might refactor this, kinda feels like it's doing too many things.
+Scan URL for more links
 
 Accepts:
 url (string): URL to scan
 
 Returns:
-Either an (array) of URLs, a (string) content type, or false on failure
+An (array) of URLs, false on failure.
 */
-function getLinksOrContentType($url = 'http://jsforcats.com/')
+function getLinks($url = 'http://jsforcats.com/')
 {
   $ret = false;
   $contentType = getContentType($url);
@@ -110,6 +109,73 @@ function getLinksOrContentType($url = 'http://jsforcats.com/')
     $ret = $contentType;
   }
   return $ret;
+}
+
+/*
+Checks for a base tag and returns the URL if one is found.
+Thanks to Chris Heald for regex help here
+(http://stackoverflow.com/questions/29191695/regex-match-only-a-base-tags-href-attribute)
+
+Accepts:
+url (string): URL to scan for base tag
+
+Returns:
+Base tag url with trailing slash (string) or false on failure
+*/
+function getBaseURL($url = '../demo_sites/sitewithbasetag.html')
+{
+  $ret = false;
+  $content = file_get_contents($url);
+  $baseTagMatch = array();
+  preg_match_all('/<base [^>]*href=\"(.*?)\"/', $content, $baseTagMatch);
+  if (count($baseTagMatch) >= 1 && count($baseTagMatch[1]) >= 1)
+  {
+    $ret = $baseTagMatch[1][0];
+    if (!preg_match("/\/$/", $ret)) $ret = $ret."/";
+  }
+  return $ret;
+}
+
+/*
+Filters out everything but http & https, and makes relative URLs absolute.
+It accounts for the potential existence of a base tag in the root URL.
+
+Accepts:
+foundURL (string): URL where the links were found (including protocol)
+links (array): An array of URL strings. The URLs can be relative, mailto and tel links will be removed.
+index (int): Index to start on in the links array. If anyone knows a better way to recursively navigate arrays shout out!
+
+Returns:
+A filtered array of absolute URLs, with mailto and tel links removed.
+*/
+function filterLinks($foundURL = '../demo_sites/sitewithbasetag.html', $links = array('http://kirk.ca', 'https://test.ca', 'kirkzcoolprotocol://test', 'mailto:someone', 'coolpic.png', 'css/main.css', '/from/the/root/of/the/domain')) {
+  $filteredLinks = array();
+  foreach ($links as $url) {
+    $urlPrefixMatches = array();
+    preg_match_all("/^.*?(?=:)/", $url, $urlPrefixMatches);
+    // If it has a match, we can assume it's an external link or a mailto or something
+    if (is_array($urlPrefixMatches) && is_array($urlPrefixMatches[0]) && count($urlPrefixMatches[0]) > 0)
+    {
+      $prefix = $urlPrefixMatches[0][0];
+      if ($prefix == 'http' || $prefix == 'https')
+      {
+        $filteredLinks[] = $url;
+      }
+    }
+    // Otherwise it's relative.. But we need to check for a base tag
+    else
+    {
+      $baseURL = getBaseURL($foundURL);
+      if (!$baseURL) $baseURL = $foundURL;
+
+      // TODO: Add check for URLs starting with / and append them to the root of the URL
+      
+      // Do we need to do this conditionally? To be continued... http://stackoverflow.com/questions/29192607/does-it-matter-how-many-slashes-are-in-a-url
+      $url = $baseURL."/".$url;
+      $filteredLinks[] = $url;
+    }
+  }
+  return $filteredLinks;
 }
 
 // From https://subinsb.com/php-check-if-string-is-json
